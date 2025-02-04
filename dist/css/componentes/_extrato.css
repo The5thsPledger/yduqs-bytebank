@@ -1,5 +1,5 @@
 .extrato {
-    background-color: #f5f5f5;
+    background-color: #000;
     padding: 30px;
     border-radius: 8px;
     width: 282px;
@@ -41,7 +41,7 @@
             }
 
             .data {
-                color: var(--cor-tercearia);
+                color: var(--cor-primaria);
             }
 
             &:last-of-type .transacao-info {

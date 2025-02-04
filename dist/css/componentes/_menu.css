@@ -1,11 +1,11 @@
 .menu {
-    background-color: #f5f5f5;
+    background-color: #000;
     padding: 30px;
     border-radius: 8px;
     width: 180px;
     text-align: center;
     margin-right: 24px;
-
+    
     & a {
         display: block;
         padding-block: 16px;

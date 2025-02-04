@@ -1,5 +1,5 @@
 import { TipoTransacao } from "../types/transacao/TipoTransacao.js";
-import { Transacao } from "../types/transacao/Transacao";
+import { Transacao } from "../Models/Transacao.js";
 
 const elementoSaldo = document.querySelector(".saldo-valor .valor") as HTMLElement;
 const elementoDataAcesso = document.querySelector(".block-saldo time") as HTMLElement;
