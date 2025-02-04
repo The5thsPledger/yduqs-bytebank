@@ -134,14 +134,4 @@ node_modules/typescript/lib/ru/diagnosticMessages.generated.json
 node_modules/typescript/lib/tr/diagnosticMessages.generated.json
 node_modules/typescript/lib/zh-cn/diagnosticMessages.generated.json
 node_modules/typescript/lib/zh-tw/diagnosticMessages.generated.json
-dist/js/main.js
-dist/js/components/extrato-component.js
-dist/js/components/nova-transacao-component.js
-dist/js/components/saldo-component.js
-dist/js/types/Conta.js
-dist/js/types/FormatoData.js
-dist/js/types/Mes.js
-dist/js/types/transacao/GrupoTransacao.js
-dist/js/types/transacao/TipoTransacao.js
-dist/js/types/transacao/Transacao.js
-dist/js/utils/formatters.js
+dist/js/*
