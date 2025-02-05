@@ -11,14 +11,11 @@ class Titular {
         }
     );
 
-    constructor (id : number) {
-        let titular : Titular;
-        titular.cpf = this.cpf;
-        titular.dataNascimento = this.dataNascimento;
-        titular.id = id;
-        titular.nomeCompleto = this.nomeCompleto;
-
-        return titular;
+    constructor (id? : number, nomeCompleto? : string, cpf? : number, dataNascimento? : Date) {
+        this.id             = id;
+        this.cpf            = cpf;
+        this.dataNascimento = dataNascimento;
+        this.nomeCompleto   = nomeCompleto;
     }
 }
 

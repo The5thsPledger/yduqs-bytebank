@@ -1,6 +1,7 @@
 import { TipoTransacao } from "../types/transacao/TipoTransacao.js";
-import { Transacao } from "../Models/Transacao.js";
+import Transacao from "../Models/Transacao.js";
 import ExtratoComponent from "./extrato-component.js";
+import Titular from "../Models/Titular.js";
 
 const elementoFormulario = document.querySelector(".block-nova-transacao form") as HTMLFormElement;
 
@@ -40,11 +41,11 @@ elementoFormulario.addEventListener("submit", function(event) {
         }
     }
     
-    const transacao : Transacao = {
-        tipoTransacao: tipo, 
-        valor: parseFloat(elementoValorTransacao.value),
-        data: new Date(elementoDataTransacao.value)
-    }
+    const transacao : Transacao = new Transacao(
+        tipo, 
+        parseFloat(elementoValorTransacao.value), 
+        new Date(elementoDataTransacao.value)
+    );
     console.log(transacao);
     ExtratoComponent.atualizar(transacao);
     elementoFormulario.reset();

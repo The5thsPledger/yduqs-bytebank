@@ -12,6 +12,7 @@ class Conta {
         return value;
     }) || [];
     private titular : Titular = JSON.parse(localStorage.getItem("titular")) || null;
+
     getSaldo() {
         return this.saldo;
     };
@@ -20,14 +21,14 @@ class Conta {
         return new Date();
     };
 
-    public getGruposTransacoes(titularId : number): GrupoTransacao[] {
+    getGruposTransacoes(): GrupoTransacao[] {
         const gruposTransacoes: GrupoTransacao[] = [];
-        const listaTransacoes: Transacao[] = Transacao.getTransacoes(titularId);
+        const listaTransacoes: Transacao[] = this.transacoes;
         const transacoesOrdenadas: Transacao[] = listaTransacoes.sort((t1, t2) => t2.data.getTime() - t1.data.getTime());
         let labelAtualGrupoTransacao: string = "";
 
         for (let transacao of transacoesOrdenadas) {
-            let labelGrupoTransacao: string = transacao.data.toLocaleDateString("pt-br", { month: "long", year: "numeric" });
+            let labelGrupoTransacao: string = transacao.data.toLocaleDateString("pt-br", { year: "numeric" });
             if (labelAtualGrupoTransacao !== labelGrupoTransacao) {
                 labelAtualGrupoTransacao = labelGrupoTransacao;
                 gruposTransacoes.push({
@@ -63,7 +64,8 @@ class Conta {
             throw new Error("O valor a ser debitado deve ser maior que zero!");
         }
         if (valor > this.saldo) {
-            throw new Error("Saldo insuficiente!");
+            alert("Saldo insuficiente!");
+            return;
         }
     
         this.saldo -= valor;

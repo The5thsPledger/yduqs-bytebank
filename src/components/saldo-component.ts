@@ -1,35 +1,24 @@
-import { TipoTransacao } from "../types/transacao/TipoTransacao.js";
-import { Transacao } from "../Models/Transacao.js";
+import Conta from "../Models/Conta.js";
 
 const elementoSaldo = document.querySelector(".saldo-valor .valor") as HTMLElement;
-const elementoDataAcesso = document.querySelector(".block-saldo time") as HTMLElement;
+
+renderizarSaldo(new Conta());
 
 const SaldoComponent = {
-    atualizar(transacao: Transacao) {
+    atualizar(conta: Conta) {
         console.log("SaldoComponent: atualizar!")
-
-        let saldo = elementoSaldo.innerHTML.split(" ");
-        let saldoFloat = parseFloat(saldo[1].replace(".", "").replace(",", "."));
-        if (saldo[0].startsWith("-")) {
-            saldoFloat *= -1;
-        }
-
-        if (transacao.tipoTransacao == TipoTransacao.DEPOSITO) {
-            saldoFloat += transacao.valor;
-        }
-        else if (
-                transacao.tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO 
-            ||  transacao.tipoTransacao == TipoTransacao.TRANSFERENCIA
-        ) {
-            saldoFloat -= transacao.valor;
-        }
-        if (saldoFloat >= 0) {
-            elementoSaldo.innerHTML = "R$ " + saldoFloat.toLocaleString("pt-br");
-        }
-        else {
-            elementoSaldo.innerHTML = "-R$ " + saldoFloat.toLocaleString("pt-br");
-        }
+        renderizarSaldo(conta);
     }
 }
 
 export default SaldoComponent;
+
+function renderizarSaldo(conta: Conta) {
+    const saldo = conta.getSaldo();
+    if (saldo >= 0) {
+        elementoSaldo.innerHTML = "R$ " + saldo.toLocaleString("pt-br");
+    }
+    else {
+        elementoSaldo.innerHTML = "-R$ " + saldo.toLocaleString("pt-br");
+    }
+}
