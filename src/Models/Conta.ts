@@ -4,31 +4,81 @@ import { GrupoTransacao } from "../types/transacao/GrupoTransacao.js";
 import Titular from "./Titular.js";
 
 class Conta {
-    private saldo: number = JSON.parse(localStorage.getItem("saldo")) || 0;
+    private titular             : Titular   = JSON.parse(localStorage.getItem("titular"));
+    private dataAbertura        : Date      = JSON.parse(localStorage.getItem("dataAbertura"))  || new Date();
+    private dataAcesso          : Date      = JSON.parse(localStorage.getItem("dataAcesso"))    || new Date();
+    private dataEncerramento    : Date      = JSON.parse(localStorage.getItem("dataEncerramento"));
+    private saldo               : number    = JSON.parse(localStorage.getItem("saldo"))     || 0;
+    private limite              : number    = JSON.parse(localStorage.getItem("limite"))    || 0;
     private transacoes: Transacao[] = JSON.parse(localStorage.getItem("transacoes"), (key: string, value: string) => {
         if (key === "data") {
             return new Date(value);
         }
         return value;
-    }) || [];
-    private titular : Titular = JSON.parse(localStorage.getItem("titular")) || null;
+    }).map(
+        (data: { 
+            tipoTransacao: TipoTransacao; valorTransacao: number; data: Date;
+        }) => new Transacao(data.tipoTransacao, data.valorTransacao, data.data)
+    ) || [];
+
+    getTitular() {
+        return this.titular;
+    }
+
+    setTitular(titular : Titular) {
+        this.titular = titular;
+    }
+
+    getDataAbertura() {
+        return this.dataAbertura;
+    }
+
+    setDataAbertura(dataAbertura? : Date) {
+        this.dataAbertura = dataAbertura? dataAbertura : new Date();
+    }
+
+    getDataAcesso(): Date {
+        return this.dataAcesso;
+    };
+
+    setDataAcesso(dataAcesso? : Date) {
+        this.dataAcesso = dataAcesso? dataAcesso : new Date();
+    }
+    
+    getDataEncerramento() {
+        return this.dataEncerramento;
+    }
+
+    setDataEncerramento(dataEncerramento? : Date) {
+        this.dataEncerramento = dataEncerramento? dataEncerramento : new Date();
+    }
 
     getSaldo() {
         return this.saldo;
     };
 
-    getDataAcesso(): Date {
-        return new Date();
-    };
+    setSaldo(saldo : number) {
+        this.saldo = saldo;
+    }
+
+    getLimite() {
+        return this.limite;
+    }
+
+    setLimite(limite : number) {
+        this.limite = limite;
+    }
 
     getGruposTransacoes(): GrupoTransacao[] {
         const gruposTransacoes: GrupoTransacao[] = [];
         const listaTransacoes: Transacao[] = this.transacoes;
-        const transacoesOrdenadas: Transacao[] = listaTransacoes.sort((t1, t2) => t2.data.getTime() - t1.data.getTime());
+        console.log(listaTransacoes)
+        const transacoesOrdenadas: Transacao[] = 
+            listaTransacoes.sort((t1, t2) => t2.getDataTransacao().getTime() - t1.getDataTransacao().getTime());
         let labelAtualGrupoTransacao: string = "";
 
         for (let transacao of transacoesOrdenadas) {
-            let labelGrupoTransacao: string = transacao.data.toLocaleDateString("pt-br", { year: "numeric" });
+            let labelGrupoTransacao: string = transacao.getDataTransacao().toLocaleDateString("pt-br", { year: "numeric" });
             if (labelAtualGrupoTransacao !== labelGrupoTransacao) {
                 labelAtualGrupoTransacao = labelGrupoTransacao;
                 gruposTransacoes.push({
@@ -43,12 +93,13 @@ class Conta {
     };
 
     registrarTransacao(novaTransacao: Transacao): void {
-        if (novaTransacao.tipoTransacao == TipoTransacao.DEPOSITO) {
-            this.depositar(novaTransacao.valor);
+        let tipoTransacao   = novaTransacao.getTipoTransacao();
+        let valorTransacao  = novaTransacao.getValorTransacao();
+        if (tipoTransacao == TipoTransacao.DEPOSITO) {
+            this.depositar(valorTransacao);
         } 
-        else if (novaTransacao.tipoTransacao == TipoTransacao.TRANSFERENCIA || novaTransacao.tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO) {
-            this.debitar(novaTransacao.valor);
-            novaTransacao.valor *= -1;
+        else if (tipoTransacao == TipoTransacao.TRANSFERENCIA || tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO) {
+            this.debitar(valorTransacao);
         } 
         else {
             throw new Error("Tipo de Transação é inválido!");

@@ -51,7 +51,7 @@ function buildExtrato(gruposTransacoes: GrupoTransacao[]) {
 
         let divPeriodo : HTMLDivElement;
         for (let transacao of grupo.transacoes) {
-            let mes = Mes[transacao.data.getMonth()]
+            let mes = Mes[transacao.getDataTransacao().getMonth()]
             if (labelMes != mes) {
                 divPeriodo = buildDivPeriodo(mes);
                 divGrupo.appendChild(divPeriodo)
@@ -90,32 +90,36 @@ function buildDivPeriodo(mes : string) : HTMLDivElement {
 
 
 function buildDivItem(transacao : Transacao): HTMLDivElement {
+    let tipoTransacao = transacao.getTipoTransacao();
     let tipo : HTMLSpanElement = document.createElement("span");
     tipo.className = "tipo";
-    tipo.innerHTML = transacao.tipoTransacao;
+    tipo.innerHTML = tipoTransacao
     
-    let valor : HTMLElement = document.createElement("strong");
-    valor.className = "valor";
-    if (transacao.tipoTransacao == TipoTransacao.DEPOSITO) {
-        valor.innerHTML = " R$ " + transacao.valor;
+    let divValor : HTMLElement = document.createElement("strong");
+    divValor.className = "valor";
+    let valorTransacao = transacao.getValorTransacao();
+    if (tipoTransacao == TipoTransacao.DEPOSITO) {
+        divValor.innerHTML = " R$ " + valorTransacao;
     }
     else if (
-        transacao.tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO 
-        ||  transacao.tipoTransacao == TipoTransacao.TRANSFERENCIA
+            tipoTransacao == TipoTransacao.PAGAMENTO_BOLETO 
+        ||  tipoTransacao == TipoTransacao.TRANSFERENCIA
     ) {
-        valor.innerHTML = " -R$ " + transacao.valor * -1;
+        divValor.innerHTML = " -R$ " + valorTransacao * -1;
     }
     
     let divInfo : HTMLDivElement = document.createElement("div");
     divInfo.className = "transacao-info";
     divInfo.appendChild(tipo)
-    divInfo.appendChild(valor)
+    divInfo.appendChild(divValor)
     
+
+    let datatransacao = transacao.getDataTransacao();
     let time : HTMLTimeElement = document.createElement("time");
     time.className = "data";
     time.innerHTML = 
-                transacao.data.getDate().toString().padStart(2, "0") 
-        + "/" + (transacao.data.getMonth() + 1).toString().padStart(2, "0");
+                (datatransacao.getDate()        ).toString().padStart(2, "0")   // getDate() returns the day of the month (1-31)
+        + "/" + (datatransacao.getMonth() + 1   ).toString().padStart(2, "0");  // getMonth() returns the month (0-11)
     
     let divItem = document.createElement("div");
     divItem.className = "transacao-item";
